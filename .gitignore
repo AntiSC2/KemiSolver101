@@ -88,3 +88,6 @@ $RECYCLE.BIN/
 *.log
 *.idb
 *.filters
+
+# Bin folder
+bin/*
