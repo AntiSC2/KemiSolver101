@@ -96,6 +96,13 @@ void Kemi::run()
 		std::cout << "Name: " << m_PeriodicTable[i].Name << std::endl;
 		std::cout << "Mass: " << m_PeriodicTable[i].AtomicMass << std::endl;
 		std::cout << "Number: " << m_PeriodicTable[i].AtomicNumber << std::endl;
-
+		std::cout << "Property: ";
+		if (m_PeriodicTable[i].Property == 0) {
+			std::cout << "Metal" << std::endl;
+		} else if (m_PeriodicTable[i].Property == 1) {
+			std::cout << "Nonmetal" << std::endl;
+		} else {
+			std::cout << "Transitionmetal" << std::endl;
+		}
 	}
 }
