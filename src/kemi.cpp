@@ -54,13 +54,23 @@ void Kemi::init(std::string file)
                                 }
                                 c++;
                                 while (BufferLine[c] != ' ') {
+                                	m_PeriodicTable[i].AtomicNumber *= 10;
                                         m_PeriodicTable[i].AtomicNumber += BufferLine[c] - '0';
-                                        //m_PeriodicTable[i].AtomicNumber *= pow(10, c);
                                         c++;
                                 }
                                 c++;
+                                int p = -1;
+                                bool point = false;
                                 while (BufferLine[c] != ' ') {
-                                        m_PeriodicTable[i].AtomicMass += (float)BufferLine[c] - (float)'0';
+                                	if (BufferLine[c] == '.') {
+						point = true;
+					} else if (point == true) {
+						m_PeriodicTable[i].AtomicMass += (float)((BufferLine[c] - '0') * pow(10, p));
+						p--;
+					} else {
+						m_PeriodicTable[i].AtomicMass *= 10;
+						m_PeriodicTable[i].AtomicMass += (float)(BufferLine[c] - '0');
+					}
                                         c++;
                                 }
                                 if (BufferLine[BufferLine.size() - 1] == 'N') {
