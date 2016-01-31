@@ -105,4 +105,12 @@ void Kemi::run()
 			std::cout << "Transitionmetal" << std::endl;
 		}
 	}
+	bool quit = false;
+	while (!quit) {
+		std::string answer;
+		std::cin >> answer;
+		if (answer == 'q') {
+			quit = true;
+		}
+	}
 }
