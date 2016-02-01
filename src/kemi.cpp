@@ -147,33 +147,28 @@ void Kemi::Init(std::string File)
 /*Handles user input and events and corresponds with the correct functions*/
 void Kemi::Run()
 {
-        for(int i = 0; i < m_Table.size(); i++) {
-		std::cout << "Name: " << m_Table[i].Name << std::endl;
-		std::cout << "Mass: " << m_Table[i].AtmMass << std::endl;
-		std::cout << "Number: " << m_Table[i].No << std::endl;
-		std::cout << "Property: ";
-		if (m_Table[i].Property == 0) {
-			std::cout << "Metal" << std::endl;
-		} else if (m_Table[i].Property == 1) {
-			std::cout << "Nonmetal" << std::endl;
-		} else {
-			std::cout << "Transitionmetal" << std::endl;
-		}
-	}
 	bool quit = false;
 	while (!quit) {
+		int c = 0;
+		std::vector<std::string> atoms;
 		std::string answer;
 		std::cin >> answer;
 		if (answer == "q") {
 			quit = true;
                 } else if (answer == "molar") {
-                        //td::string Atoms[2] = {"Na", "Cl"};
-                        std::vector<std::string> Atoms;
-                        Atoms.push_back("H");
-                        Atoms.push_back("H");
-                        Atoms.push_back("O");                        
-                        float hello = MolarMass(Atoms.data(), 3);
-                        std::cout << "Molar Mass: " << hello << " g/mol." << std::endl;
+                	if (atoms.size() > 0)
+                		atoms.clear();
+                	while (!std::cin.fail()) {
+				std::cin >> answer;
+				auto it = m_Elements.find(answer);
+				if (it != m_Elements.end()) {
+					atoms.push_back(answer);
+				} else if (answer == "done") {
+					break;
+				}
+                	}
+                        float Result = MolarMass(atoms.data(), 3);
+                        std::cout << "Molar Mass: " << Result << " g/mol." << std::endl;
                 } else if (answer == "substance") {
                         Substance();
                 } else if (answer == "mass") {
