@@ -27,6 +27,7 @@ SOFTWARE.
 #include <string>
 #include <exception>
 #include <vector>
+#include <map>
 #include <string>
 #include <cmath>
 
@@ -40,6 +41,10 @@ public:
         void init(std::string file);
         void run();
 private:
+        float molar_mass();
+        float mass();
+        float substance();
         std::vector<Element> m_PeriodicTable;
+        std::map<std::string, int> m_Elements;
 };
 

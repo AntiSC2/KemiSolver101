@@ -32,6 +32,45 @@ Kemi::~Kemi()
         ;
 }
 
+float Kemi::molar_mass()
+{
+        std::string answer;
+        std::cin >> answer;
+        int a = m_Elements[answer];
+        std::cin >> answer;
+        int b = m_Elements[answer];
+        std::cout << "Molar mass: " << m_PeriodicTable[a - 1].AtomicMass + m_PeriodicTable[b - 1].AtomicMass << " g/molar." << std::endl;
+        return m_PeriodicTable[a - 1].AtomicMass + m_PeriodicTable[b - 1].AtomicMass;
+}
+
+float Kemi::mass()
+{
+        std::string answer;
+        std::cin >> answer;
+        int a = m_Elements[answer];
+        std::cin >> answer;
+        int b = m_Elements[answer];
+        float molar = m_PeriodicTable[a - 1].AtomicMass + m_PeriodicTable[b - 1].AtomicMass;
+        float substance = 0.0f;
+        std::cin >> substance;
+        std::cout << "Mass: " << substance * molar << " g." << std::endl;
+        return substance * molar;
+}
+
+float Kemi::substance()
+{
+        std::string answer;
+        std::cin >> answer;
+        int a = m_Elements[answer];
+        std::cin >> answer;
+        int b = m_Elements[answer];
+        int molar = m_PeriodicTable[a - 1].AtomicMass + m_PeriodicTable[b - 1].AtomicMass;
+        float mass = 0.0f;
+        std::cin >> mass;
+        std::cout << "Substance: " << mass / molar << " molar." << std::endl;
+        return mass / molar;
+}
+
 /*Loads a file and reads in all the information to create a periodic table*/
 void Kemi::init(std::string file)
 {
@@ -52,6 +91,7 @@ void Kemi::init(std::string file)
                                         m_PeriodicTable[i].Name += BufferLine[c];
                                         c++;
                                 }
+                                m_Elements[m_PeriodicTable[i].Name] = i + 1;
                                 c++;
                                 while (BufferLine[c] != ' ') {
                                 	m_PeriodicTable[i].AtomicNumber *= 10;
@@ -109,8 +149,14 @@ void Kemi::run()
 	while (!quit) {
 		std::string answer;
 		std::cin >> answer;
-		if (answer == 'q') {
+		if (answer == "q") {
 			quit = true;
-		}
+                } else if (answer == "molar") {
+                        molar_mass();
+                } else if (answer == "substance") {
+                        substance();
+                } else if (answer == "mass") {
+                        mass();
+                }
 	}
 }
