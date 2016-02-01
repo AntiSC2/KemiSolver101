@@ -23,14 +23,14 @@ SOFTWARE.
 #include <string>
 
 enum type { Metal, NonMetal, TransitionMetal };
-
+/*Represents a single element in the periodic table*/
 class Element {
 public:
         Element();
         ~Element();
 
-        int AtomicNumber = 0;
-        float AtomicMass = 0.0f;
+        int No = 0;
+        float AtmMass = 0.0f;
         type Property = type::NonMetal;
         std::string Name = "";
 };

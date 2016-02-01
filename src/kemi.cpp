@@ -29,96 +29,111 @@ Kemi::Kemi()
 
 Kemi::~Kemi()
 {
-        ;
+        m_Table.clear();
+        m_Elements.clear();
 }
 
-float Kemi::molar_mass()
+float Kemi::MolarMass(std::string Atoms[], int n)
+{
+        try {
+                float MolarMass = 0.0f;
+                for (int i = 0; i < n; i++) {
+                        int e = m_Elements[Atoms[i]];
+                        MolarMass += m_Table[e - 1].AtmMass;
+                }
+                return MolarMass;
+        }
+        catch (std::exception &e) {
+                std::cout << e.what() << std::endl;
+        }
+        return 0.0f;
+}
+
+float Kemi::Mass()
 {
         std::string answer;
         std::cin >> answer;
         int a = m_Elements[answer];
         std::cin >> answer;
         int b = m_Elements[answer];
-        std::cout << "Molar mass: " << m_PeriodicTable[a - 1].AtomicMass + m_PeriodicTable[b - 1].AtomicMass << " g/molar." << std::endl;
-        return m_PeriodicTable[a - 1].AtomicMass + m_PeriodicTable[b - 1].AtomicMass;
-}
-
-float Kemi::mass()
-{
-        std::string answer;
-        std::cin >> answer;
-        int a = m_Elements[answer];
-        std::cin >> answer;
-        int b = m_Elements[answer];
-        float molar = m_PeriodicTable[a - 1].AtomicMass + m_PeriodicTable[b - 1].AtomicMass;
+        float molar = 0.0f;
+        molar += m_Table[a - 1].AtmMass;
+        molar += m_Table[b - 1].AtmMass;
         float substance = 0.0f;
         std::cin >> substance;
         std::cout << "Mass: " << substance * molar << " g." << std::endl;
         return substance * molar;
 }
 
-float Kemi::substance()
+float Kemi::Substance()
 {
         std::string answer;
         std::cin >> answer;
         int a = m_Elements[answer];
         std::cin >> answer;
         int b = m_Elements[answer];
-        int molar = m_PeriodicTable[a - 1].AtomicMass + m_PeriodicTable[b - 1].AtomicMass;
+        float molar = 0.0f;
+        molar += m_Table[a - 1].AtmMass;
+        molar += m_Table[b - 1].AtmMass;
         float mass = 0.0f;
         std::cin >> mass;
         std::cout << "Substance: " << mass / molar << " molar." << std::endl;
         return mass / molar;
 }
 
-/*Loads a file and reads in all the information to create a periodic table*/
-void Kemi::init(std::string file)
+/*
+ * Creates a periodic table from a file.
+ * Format to follow inside the file:
+ * Abbrevation_of_the_element Atomic_Number Atomic_Mass Metal_or_not
+ * Example: H 1 1.008 N
+ */
+void Kemi::Init(std::string File)
 {
-        std::ifstream File;
-	File.open(file);
+        std::ifstream file_buffer;
+	file_buffer.open(File);
 	try {
-                if (!File.is_open()) {
-                        Error FileError;
-                        throw FileError.set_error("Could not load file " + file + '!');
+                if (!file_buffer.is_open()) {
+                        Error file_error;
+                        throw file_error.set_error("Could not load file " + File + '!');
                 } else {
-                        std::string BufferLine = "";
+                        std::string line = "";
                         int i = 0;
-                        while (std::getline(File, BufferLine)) {
-                                m_PeriodicTable.emplace_back(Element());
+                        while (std::getline(file_buffer, line)) {
+                                m_Table.emplace_back(Element());
 
                                 int c = 0;
-                                while (BufferLine[c] != ' ') {
-                                        m_PeriodicTable[i].Name += BufferLine[c];
+                                while (line[c] != ' ') {
+                                        m_Table[i].Name += line[c];
                                         c++;
                                 }
-                                m_Elements[m_PeriodicTable[i].Name] = i + 1;
+                                m_Elements[m_Table[i].Name] = i + 1;
                                 c++;
-                                while (BufferLine[c] != ' ') {
-                                	m_PeriodicTable[i].AtomicNumber *= 10;
-                                        m_PeriodicTable[i].AtomicNumber += BufferLine[c] - '0';
+                                while (line[c] != ' ') {
+                                	m_Table[i].No *= 10;
+                                        m_Table[i].No += line[c] - '0';
                                         c++;
                                 }
                                 c++;
                                 int p = -1;
                                 bool point = false;
-                                while (BufferLine[c] != ' ') {
-                                	if (BufferLine[c] == '.') {
+                                while (line[c] != ' ') {
+                                	if (line[c] == '.') {
 						point = true;
 					} else if (point == true) {
-						m_PeriodicTable[i].AtomicMass += (float)((BufferLine[c] - '0') * pow(10, p));
+						m_Table[i].AtmMass += (float)((line[c] - '0') * pow(10, p));
 						p--;
 					} else {
-						m_PeriodicTable[i].AtomicMass *= 10;
-						m_PeriodicTable[i].AtomicMass += (float)(BufferLine[c] - '0');
+						m_Table[i].AtmMass *= 10;
+						m_Table[i].AtmMass += (float)(line[c] - '0');
 					}
                                         c++;
                                 }
-                                if (BufferLine[BufferLine.size() - 1] == 'N') {
-					m_PeriodicTable[i].Property = type::NonMetal;
-                                } else if (BufferLine[BufferLine.size() - 1] == 'M') {
-					m_PeriodicTable[i].Property = type::Metal;
+                                if (line[line.size() - 1] == 'N') {
+					m_Table[i].Property = type::NonMetal;
+                                } else if (line[line.size() - 1] == 'M') {
+					m_Table[i].Property = type::Metal;
                                 } else {
-					m_PeriodicTable[i].Property = type::TransitionMetal;
+					m_Table[i].Property = type::TransitionMetal;
 				}
                                 i++;
                         }
@@ -130,16 +145,16 @@ void Kemi::init(std::string file)
 }
 
 /*Handles user input and events and corresponds with the correct functions*/
-void Kemi::run()
+void Kemi::Run()
 {
-        for(int i = 0; i < m_PeriodicTable.size(); i++) {
-		std::cout << "Name: " << m_PeriodicTable[i].Name << std::endl;
-		std::cout << "Mass: " << m_PeriodicTable[i].AtomicMass << std::endl;
-		std::cout << "Number: " << m_PeriodicTable[i].AtomicNumber << std::endl;
+        for(int i = 0; i < m_Table.size(); i++) {
+		std::cout << "Name: " << m_Table[i].Name << std::endl;
+		std::cout << "Mass: " << m_Table[i].AtmMass << std::endl;
+		std::cout << "Number: " << m_Table[i].No << std::endl;
 		std::cout << "Property: ";
-		if (m_PeriodicTable[i].Property == 0) {
+		if (m_Table[i].Property == 0) {
 			std::cout << "Metal" << std::endl;
-		} else if (m_PeriodicTable[i].Property == 1) {
+		} else if (m_Table[i].Property == 1) {
 			std::cout << "Nonmetal" << std::endl;
 		} else {
 			std::cout << "Transitionmetal" << std::endl;
@@ -152,11 +167,17 @@ void Kemi::run()
 		if (answer == "q") {
 			quit = true;
                 } else if (answer == "molar") {
-                        molar_mass();
+                        //td::string Atoms[2] = {"Na", "Cl"};
+                        std::vector<std::string> Atoms;
+                        Atoms.push_back("H");
+                        Atoms.push_back("H");
+                        Atoms.push_back("O");                        
+                        float hello = MolarMass(Atoms.data(), 3);
+                        std::cout << "Molar Mass: " << hello << " g/mol." << std::endl;
                 } else if (answer == "substance") {
-                        substance();
+                        Substance();
                 } else if (answer == "mass") {
-                        mass();
+                        Mass();
                 }
 	}
 }

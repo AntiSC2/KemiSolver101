@@ -25,7 +25,7 @@ SOFTWARE.
 int main(int argc, char *argv[])
 {
         Kemi k;
-        k.init("Elements.txt");
-        k.run();
+        k.Init("Elements.txt");
+        k.Run();
         return 0;
 }

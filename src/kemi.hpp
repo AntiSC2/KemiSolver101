@@ -31,20 +31,20 @@ SOFTWARE.
 #include <string>
 #include <cmath>
 
-
+/*Handles the execution of the program*/
 class Kemi
 {
 public:
         Kemi();
         ~Kemi();
 
-        void init(std::string file);
-        void run();
+        void Init(std::string File);
+        void Run();
 private:
-        float molar_mass();
-        float mass();
-        float substance();
-        std::vector<Element> m_PeriodicTable;
+        float MolarMass(std::string Atoms[], int n = 0);
+        float Mass();
+        float Substance();
+        std::vector<Element> m_Table;
         std::map<std::string, int> m_Elements;
 };
 
