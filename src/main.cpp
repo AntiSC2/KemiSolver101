@@ -24,6 +24,9 @@ SOFTWARE.
 
 int main(int argc, char *argv[])
 {
+        std::cout << "KemiSolver101 Version 0.1" << std::endl;
+        std::cout << "Author: Jakob Sinclair" << std::endl;
+        std::cout << "All code is avalible through the MIT license." << std::endl;
         Kemi k;
         k.Init("Elements.txt");
         k.Run();
