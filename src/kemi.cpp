@@ -131,6 +131,7 @@ void Kemi::Init(std::string File)
 /*Handles user input and events and corresponds with the correct functions*/
 void Kemi::Run()
 {
+        std::cout << "Enter a command(mass, molar or substance): " << std::endl;
 	bool quit = false;
 	while (!quit) {
 		int c = 0;
@@ -140,6 +141,8 @@ void Kemi::Run()
 		if (answer == "q") {
 			quit = true;
                 } else if (answer == "molar") {
+                        std::cout << "Enter the abreviations for all the atoms(write \"done\" when you are done): "
+                                  << std::endl;
                 	if (atoms.size() > 0)
                 		atoms.clear();
                 	while (!std::cin.fail()) {
@@ -156,6 +159,8 @@ void Kemi::Run()
                         std::cout << "Molar Mass: " << Result 
                                   << " g/mol." << std::endl;
                 } else if (answer == "substance") {
+                        std::cout << "Enter the abreviations for all the atoms(write \"done\" when you are done): "
+                                  << std::endl;
                         if (atoms.size() > 0)
                                 atoms.clear();
                         while (!std::cin.fail()) {
@@ -175,6 +180,8 @@ void Kemi::Run()
                         std::cout << "Amount of substance: " << Result
                                   << " molar." << std::endl;
                 } else if (answer == "mass") {
+                        std::cout << "Enter the abreviations for all the atoms(write \"done\" when you are done): "
+                                  << std::endl;
                         if (atoms.size() > 0)
                                 atoms.clear();
                         while (!std::cin.fail()) {
