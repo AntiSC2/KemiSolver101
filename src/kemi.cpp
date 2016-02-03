@@ -93,8 +93,8 @@ void Kemi::Init(std::string File)
 	file_buffer.open(File);
 	try {
                 if (!file_buffer.is_open()) {
-                        Error file_error;
-                        throw file_error.set_error("Could not load file " + File + '!');
+                        Error e;
+                        throw e.set_error("Could not load file " + File + '!');
                 } else {
                         std::string line = "";
                         int i = 0;
@@ -128,12 +128,12 @@ void Kemi::Init(std::string File)
 					}
                                         c++;
                                 }
-                                if (line[line.size() - 1] == 'N') {
-					m_Table[i].Property = type::NonMetal;
-                                } else if (line[line.size() - 1] == 'M') {
-					m_Table[i].Property = type::Metal;
+                                if (line[line.size() - 1] == 'M') {
+					m_Table[i].Property = (type)0;
+                                } else if (line[line.size() - 1] == 'N') {
+					m_Table[i].Property = (type)1;
                                 } else {
-					m_Table[i].Property = type::TransitionMetal;
+					m_Table[i].Property = (type)2;
 				}
                                 i++;
                         }

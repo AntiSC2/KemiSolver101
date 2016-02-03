@@ -22,7 +22,7 @@ SOFTWARE.
 #pragma once
 #include <string>
 
-enum type { Metal, NonMetal, TransitionMetal };
+enum type {Metal = 0, NonMetal = 1, TransitionMetal = 2};
 /*Represents a single element in the periodic table*/
 class Element {
 public:
@@ -31,7 +31,7 @@ public:
 
         int No = 0;
         float AtmMass = 0.0f;
-        type Property = type::NonMetal;
+        type Property = type::Metal;
         std::string Name = "";
 };
 
