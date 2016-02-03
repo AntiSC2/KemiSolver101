@@ -49,36 +49,20 @@ float Kemi::MolarMass(std::string Atoms[], int n)
         return 0.0f;
 }
 
-float Kemi::Mass()
+float Kemi::Mass(std::string Atoms[], int n, float s)
 {
-        std::string answer;
-        std::cin >> answer;
-        int a = m_Elements[answer];
-        std::cin >> answer;
-        int b = m_Elements[answer];
-        float molar = 0.0f;
-        molar += m_Table[a - 1].AtmMass;
-        molar += m_Table[b - 1].AtmMass;
-        float substance = 0.0f;
-        std::cin >> substance;
-        std::cout << "Mass: " << substance * molar << " g." << std::endl;
-        return substance * molar;
+        float Mass = 0.0f;
+        float MolarMassAtoms = MolarMass(Atoms, n);
+        Mass = MolarMassAtoms * s;
+        return Mass;
 }
 
-float Kemi::Substance()
+float Kemi::Substance(std::string Atoms[], int n, float m)
 {
-        std::string answer;
-        std::cin >> answer;
-        int a = m_Elements[answer];
-        std::cin >> answer;
-        int b = m_Elements[answer];
-        float molar = 0.0f;
-        molar += m_Table[a - 1].AtmMass;
-        molar += m_Table[b - 1].AtmMass;
-        float mass = 0.0f;
-        std::cin >> mass;
-        std::cout << "Substance: " << mass / molar << " molar." << std::endl;
-        return mass / molar;
+        float Substance = 0.0f;
+        float MolarMassAtoms = MolarMass(Atoms, n);
+        Substance = m / MolarMassAtoms;
+        return Substance;
 }
 
 /*
@@ -147,6 +131,7 @@ void Kemi::Init(std::string File)
 /*Handles user input and events and corresponds with the correct functions*/
 void Kemi::Run()
 {
+        std::cout << "Enter a command(mass, molar or substance): " << std::endl;
 	bool quit = false;
 	while (!quit) {
 		int c = 0;
@@ -156,23 +141,65 @@ void Kemi::Run()
 		if (answer == "q") {
 			quit = true;
                 } else if (answer == "molar") {
+                        std::cout << "Enter the abreviations for all the atoms(write \"done\" when you are done): "
+                                  << std::endl;
                 	if (atoms.size() > 0)
                 		atoms.clear();
                 	while (!std::cin.fail()) {
 				std::cin >> answer;
 				auto it = m_Elements.find(answer);
+
 				if (it != m_Elements.end()) {
 					atoms.push_back(answer);
 				} else if (answer == "done") {
 					break;
 				}
                 	}
-                        float Result = MolarMass(atoms.data(), 3);
-                        std::cout << "Molar Mass: " << Result << " g/mol." << std::endl;
+                        float Result = MolarMass(atoms.data(), atoms.size());
+                        std::cout << "Molar Mass: " << Result 
+                                  << " g/mol." << std::endl;
                 } else if (answer == "substance") {
-                        Substance();
+                        std::cout << "Enter the abreviations for all the atoms(write \"done\" when you are done): "
+                                  << std::endl;
+                        if (atoms.size() > 0)
+                                atoms.clear();
+                        while (!std::cin.fail()) {
+                                std::cin >> answer;
+                                auto it = m_Elements.find(answer);
+
+                                if (it != m_Elements.end()) {
+                                        atoms.push_back(answer);
+                                } else if (answer == "done") {
+                                        break;
+                                }
+                        }
+                        float tmp;
+                        std::cout << "Enter mass: ";
+                        std::cin >> tmp;
+                        float Result = Substance(atoms.data(), atoms.size(), tmp);
+                        std::cout << "Amount of substance: " << Result
+                                  << " molar." << std::endl;
                 } else if (answer == "mass") {
-                        Mass();
+                        std::cout << "Enter the abreviations for all the atoms(write \"done\" when you are done): "
+                                  << std::endl;
+                        if (atoms.size() > 0)
+                                atoms.clear();
+                        while (!std::cin.fail()) {
+                                std::cin >> answer;
+                                auto it = m_Elements.find(answer);
+
+                                if (it != m_Elements.end()) {
+                                        atoms.push_back(answer);
+                                } else if (answer == "done") {
+                                        break;
+                                }
+                        }
+                        float tmp;
+                        std::cout << "Enter amount of substance: ";
+                        std::cin >> tmp;
+                        float Result = Mass(atoms.data(), atoms.size(), tmp);
+                        std::cout << "Mass: " << Result
+                                  << " g." << std::endl;
                 }
 	}
 }

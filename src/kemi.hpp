@@ -42,8 +42,8 @@ public:
         void Run();
 private:
         float MolarMass(std::string Atoms[], int n = 0);
-        float Mass();
-        float Substance();
+        float Mass(std::string Atoms[], int n = 0, float s = 0.0f);
+        float Substance(std::string Atoms[], int n = 0, float m = 0.0f);
         std::vector<Element> m_Table;
         std::map<std::string, int> m_Elements;
 };
