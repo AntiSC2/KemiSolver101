@@ -35,18 +35,12 @@ Kemi::~Kemi()
 
 float Kemi::MolarMass(std::string Atoms[], int n)
 {
-        try {
-                float MolarMass = 0.0f;
-                for (int i = 0; i < n; i++) {
-                        int e = m_Elements[Atoms[i]];
-                        MolarMass += m_Table[e - 1].AtmMass;
-                }
-                return MolarMass;
+        float MolarMass = 0.0f;
+        for (int i = 0; i < n; i++) {
+                int e = m_Elements[Atoms[i]];
+                MolarMass += m_Table[e - 1].Mass;
         }
-        catch (std::exception &e) {
-                std::cout << e.what() << std::endl;
-        }
-        return 0.0f;
+        return MolarMass;
 }
 
 float Kemi::Mass(std::string Atoms[], int n, float s)
@@ -63,6 +57,50 @@ float Kemi::Substance(std::string Atoms[], int n, float m)
         float MolarMassAtoms = MolarMass(Atoms, n);
         Substance = m / MolarMassAtoms;
         return Substance;
+}
+
+void Kemi::LoadString(std::string line, int i)
+{
+        try {
+                int c = 0;
+                while (line.at(c) != ' ') {
+                        m_Table.at(i).Name += line[c];
+                        c++;
+                }
+                m_Elements[m_Table.at(i).Name] = i + 1;
+                c++;
+                while (line.at(c) != ' ') {
+                        m_Table.at(i).No *= 10;
+                        m_Table.at(i).No += line[c] - '0';
+                        c++;
+                }
+                c++;
+                int p = 0;
+                bool point = false;
+                while (line.at(c) != ' ') {
+                        if (line.at(c) == '.') {
+                                point = true;
+                        } else if (point == true) {
+                                p--;
+                        } else {
+                                m_Table.at(i).Mass *= 10.0f;
+                                m_Table.at(i).Mass += (float)(line[c] - '0');
+                        }
+                        c++;
+                }
+                m_Table.at(i).Mass *= (float)pow(10, p);
+                if (line.at(line.size() - 1) == 'M') {
+                        m_Table.at(i).Property = (type)0;
+                } else if (line[line.size() - 1] == 'N') {
+                        m_Table.at(c).Property = (type)1;
+                } else {
+                        m_Table.at(c).Property = (type)2;
+                }
+                i++;
+        }
+        catch (std::exception &e) {
+                std::cout << e.what() << std::endl;
+        }
 }
 
 /*
@@ -82,43 +120,9 @@ void Kemi::Init(std::string File)
                 } else {
                         std::string line = "";
                         int i = 0;
-                        while (std::getline(file_buffer, line)) {
+                        while (getline(file_buffer, line)) {
                                 m_Table.emplace_back(Element());
-
-                                int c = 0;
-                                while (line[c] != ' ') {
-                                        m_Table[i].Name += line[c];
-                                        c++;
-                                }
-                                m_Elements[m_Table[i].Name] = i + 1;
-                                c++;
-                                while (line[c] != ' ') {
-                                	m_Table[i].No *= 10;
-                                        m_Table[i].No += line[c] - '0';
-                                        c++;
-                                }
-                                c++;
-                                int p = -1;
-                                bool point = false;
-                                while (line[c] != ' ') {
-                                	if (line[c] == '.') {
-						point = true;
-					} else if (point == true) {
-						m_Table[i].AtmMass += (float)((line[c] - '0') * pow(10, p));
-						p--;
-					} else {
-						m_Table[i].AtmMass *= 10;
-						m_Table[i].AtmMass += (float)(line[c] - '0');
-					}
-                                        c++;
-                                }
-                                if (line[line.size() - 1] == 'M') {
-					m_Table[i].Property = (type)0;
-                                } else if (line[line.size() - 1] == 'N') {
-					m_Table[i].Property = (type)1;
-                                } else {
-					m_Table[i].Property = (type)2;
-				}
+                                LoadString(line, i);
                                 i++;
                         }
                 }

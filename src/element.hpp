@@ -30,7 +30,7 @@ public:
         ~Element();
 
         int No = 0;
-        float AtmMass = 0.0f;
+        float Mass = 0.0f;
         type Property = type::Metal;
         std::string Name = "";
 };
