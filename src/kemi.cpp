@@ -69,18 +69,20 @@ void Kemi::LoadString(std::string line, int i)
                 }
                 m_Elements[m_Table.at(i).Name] = i + 1;
                 c++;
+
                 while (line.at(c) != ' ') {
                         m_Table.at(i).No *= 10;
                         m_Table.at(i).No += line[c] - '0';
                         c++;
                 }
                 c++;
+
                 int p = 0;
-                bool point = false;
+                bool exp = false;
                 while (line.at(c) != ' ') {
                         if (line.at(c) == '.') {
-                                point = true;
-                        } else if (point == true) {
+                                exp = true;
+                        } else if (exp == true) {
                                 p--;
                                 m_Table.at(i).Mass *= 10.0f;
                                 m_Table.at(i).Mass += (float)(line[c] - '0');
@@ -91,12 +93,13 @@ void Kemi::LoadString(std::string line, int i)
                         c++;
                 }
                 m_Table.at(i).Mass *= (float)pow(10, p);
+
                 if (line.at(line.size() - 1) == 'M') {
                         m_Table.at(i).Property = (type)0;
                 } else if (line.at(line.size() - 1) == 'N') {
-                        m_Table.at(c).Property = (type)1;
+                        m_Table.at(i).Property = (type)1;
                 } else {
-                        m_Table.at(c).Property = (type)2;
+                        m_Table.at(i).Property = (type)2;
                 }
         }
         catch (std::exception &e) {
@@ -136,9 +139,6 @@ void Kemi::Init(std::string File)
 /*Handles user input and events and corresponds with the correct functions*/
 void Kemi::Run()
 {
-        for (int i = 0; i < m_Table.size(); i++) {
-                std::cout << m_Table[i].No << std::endl;
-        }
         std::cout << "Enter a command(mass, molar or substance): " << std::endl;
 	bool quit = false;
 	while (!quit) {
